@@ -34,16 +34,24 @@ def dist_2D(ra1, ra2, dec1, dec2):
     # Return output in range of degrees [0, 180];
     return dr
 
-# The 3-D distance finder is harder...
-def dist_3D(ra1, ra2, dec1, dec2, z1, z2):
-    # Okay, so inputs are given in degrees and in redshift...
-    # Convert from redshift to comoving coorindates, since that makes the most sense for this analysis
-    # Treat as 3 vectors to get the comoving separation?
-    # In that case, output must be distance in comoving units (Mpc)
+# The 3-D distance finder is harder
+# One version for computing from redshift
+def dist_3D_from_z(ra1, ra2, dec1, dec2, z1, z2):
+    # Inputs are given in degrees and in redshift
+    # Convert from redshift to comoving dist, then call the regular 3D distance function
+    # Outputs a comoving distance in Megaparsecs
 
     # Get the comoving distances of each galaxy based on redshift
     d1 = z2d_comoving(z1);
     d2 = z2d_comoving(z2);
+    
+    # Call the regular 3D distance function
+    return dist_3D(ra1, ra2, dec1, dec2, d1, d2);
+
+# Second (regular) version computes from comoving distances
+def dist_3D(ra1, ra2, dec1, dec2, d1, d2):
+    # Inputs are given in degrees and in comoving distances
+    # Outputs a comoving distance in Megaparsecs
 
     # We want the modulus of r_1 - r_2, so we need to compute r_1.r_2
     # Get angle between two galaxies using dist_2D
@@ -53,7 +61,7 @@ def dist_3D(ra1, ra2, dec1, dec2, z1, z2):
     # Compute the dot product
     dot = d1*d2*np.cos(angle);
 
-    # Now compute the distance between the two in Mpc
+    # Now compute magnitude of r_1-r_2 in Mpc
     dr = np.sqrt(d1**2 + d2**2 - 2*dot);
 
     # Return this distance

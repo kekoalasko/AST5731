@@ -13,3 +13,8 @@ Not really sure what the rules are for uploading data sets to a git repo, so her
     Good luck if you're on Windows.
 
 Put the `.fits` file in this directory. Loading the data requires the path be the local `./` directory.
+
+## Running the code
+If computing the 3D distances, then the longest step of running the code is converting from redshift to comoving distances (units of Mpc).
+
+*We should set up the code to first compute the distances to every galaxy (function `dist.dist_3D_from_z()`) and save this output. Then we can compute the distances between each galaxy using the comoving distances instead of the redshifts (function `dist.dist_3D()`).*
