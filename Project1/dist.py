@@ -33,3 +33,52 @@ def dist_2D(ra1, ra2, dec1, dec2):
 
     # Return output in range of degrees [0, 180];
     return dr
+
+# The 3-D distance finder is harder...
+def dist_3D(ra1, ra2, dec1, dec2, z1, z2):
+    # Okay, so inputs are given in degrees and in redshift...
+    # Convert from redshift to comoving coorindates, since that makes the most sense for this analysis
+    # Treat as 3 vectors to get the comoving separation?
+    # In that case, output must be distance in comoving units (Mpc)
+
+    # Get the comoving distances of each galaxy based on redshift
+    d1 = z2d_comoving(z1);
+    d2 = z2d_comoving(z2);
+
+    # We want the modulus of r_1 - r_2, so we need to compute r_1.r_2
+    # Get angle between two galaxies using dist_2D
+    angle = dist_2D(ra1, ra2, dec1, dec2);
+    # Convert to radians
+    angle = np.deg2rad(angle);
+    # Compute the dot product
+    dot = d1*d2*np.cos(angle);
+
+    # Now compute the distance between the two in Mpc
+    dr = np.sqrt(d1**2 + d2**2 - 2*dot);
+
+    # Return this distance
+    return dr
+
+# Helper function to convert from reshift to comoving distance
+def z2d_comoving(z, lambda_M=0.308, lambda_L=0.692, h=0.674):
+    # Inputs are redshift
+    # Default cosmological parameters are those of the latest Planck release
+
+    # Do the 1/H(z') integral from z'=0 to z'=z
+    d = int_1overH(z, M=lambda_M, L=lambda_L);
+
+    # Multiply by factor of comoving Hubble Horizon for answer in Mpc
+    return np.multiply(d, 3000/h);
+
+# Helper function for computing the comoving distance integral
+def int_1overH(zs, zl=0, M=0.308, L=0.692, dz=1e-5):
+    # Define a numpy array of the redshift bin centers that we will use
+    z = np.arange(zl, zs, dz) + dz/2;
+
+    # Compute height of integrand at each value of z
+    f = np.power(M*np.power(1+z, 3) + L, -0.5);
+
+    # Sum over heights and multiply by dz
+    value = np.sum(f) * dz;
+
+    return value
