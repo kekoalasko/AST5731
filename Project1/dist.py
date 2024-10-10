@@ -68,7 +68,7 @@ def dist_3D(ra1, ra2, dec1, dec2, d1, d2):
     return dr
 
 # Helper function to convert from reshift to comoving distance
-def z2d_comoving(z, lambda_M=0.308, lambda_L=0.692, h=0.674):
+def z2d_comoving(z, lambda_M=0.315, lambda_L=0.689, h=0.674):
     # Inputs are redshift
     # Default cosmological parameters are those of the latest Planck release
 
@@ -79,7 +79,7 @@ def z2d_comoving(z, lambda_M=0.308, lambda_L=0.692, h=0.674):
     return np.multiply(d, 3000/h);
 
 # Helper function for computing the comoving distance integral
-def int_1overH(zs, zl=0, M=0.308, L=0.692, dz=1e-5):
+def int_1overH(zs, zl=0, M=0.315, L=0.689, dz=1e-5):
     # Define a numpy array of the redshift bin centers that we will use
     z = np.arange(zl, zs, dz) + dz/2;
 
